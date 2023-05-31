@@ -14,6 +14,5 @@ router.get('/todos', isLoggedIn, readTodosRoute);
 router.post('/todos', isLoggedIn, createTodosRoute);
 router.put('/todos/:id', isLoggedIn, updateTodosRoute);
 router.delete('/todos/:id', isLoggedIn, deleteTodoRoute);
-// delete
 
 module.exports = router;
