@@ -26,7 +26,8 @@ function ToDoApp() {
   return (
     <div>
       <h1>To Do Application</h1>
-      <Panel toggleable header="New Task">
+      <div className="row1">
+      <Panel header="New Task">
       <div className={`card ${(!showDescription) ? 'slide-in' : 'slide-out'}`} id="newTaskCard">
         <div id="addTask">
           <span className="p-float-label">
@@ -59,6 +60,10 @@ function ToDoApp() {
         </div>
       </div>
       </Panel>
+      <Panel className="calendarPanel" header="Calendar">
+        <Calendar value={date} onChange={(e) => setDate(e.value)} inline showWeek />
+      </Panel>
+      </div>
     </div>
   );
 }

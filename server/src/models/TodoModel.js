@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
 
 const TodoSchema = new mongoose.Schema({
-    text: {
+    taskName: {
+        type: String,
+    },
+    taskDescription: {
+        type: String,
+    },
+    dueDate: {
+        type: String,
+    },
+    Frequency: {
         type: String,
     },
     completed: {

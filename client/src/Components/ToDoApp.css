@@ -1,3 +1,7 @@
+.row1 {
+    display: flex;
+}
+
 #newTaskCard {
     width: 50vw;
     overflow-y: hidden;
@@ -35,4 +39,8 @@
 
 #closeDescription {
     margin-bottom: 1.5vh;
+}
+
+.calendarPanel {
+    margin-left: 2vw;
 }
