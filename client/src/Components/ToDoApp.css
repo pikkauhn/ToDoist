@@ -1,0 +1,38 @@
+#newTaskCard {
+    width: 50vw;
+    overflow-y: hidden;
+    height: 50vh;
+    transition: max-height .2s linear;
+}
+
+#addTask {
+    display: flex;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.desc {
+    margin-top: 3vh;
+    justify-content: space-between;
+}
+
+.slide-out {
+    max-height: 20vh;
+}
+
+.slide-in {
+    max-height: 10vh;
+}
+
+.p-panel {
+    max-width: 52vw;
+}
+
+#descriptionInput {
+    width: 40vw;
+    margin-right: 2vw;
+}
+
+#closeDescription {
+    margin-bottom: 1.5vh;
+}
