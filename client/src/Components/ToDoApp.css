@@ -1,5 +1,11 @@
 .row1 {
     display: flex;
+    justify-content: space-between;
+}
+
+.newTaskPanel {
+    width: 52vw;
+    max-height: 100vh;
 }
 
 #newTaskCard {
@@ -42,5 +48,10 @@
 }
 
 .calendarPanel {
-    margin-left: 2vw;
+    width: 40vw;
+}
+
+.Calendar {
+    width: 40vw;
+    max-height: 50vh;
 }
