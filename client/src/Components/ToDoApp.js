@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './ToDoApp.css';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -27,7 +27,7 @@ function ToDoApp() {
     <div>
       <h1>To Do Application</h1>
       <div className="row1">
-      <Panel header="New Task" className="newTaskPanel" toggleable>
+      <Panel header="New Task" toggleable>
       <div className={`card ${(!showDescription) ? 'slide-in' : 'slide-out'}`} id="newTaskCard">
         <div id="addTask">
           <span className="p-float-label">
@@ -60,7 +60,7 @@ function ToDoApp() {
         </div>
       </div>
       </Panel>
-      <Panel className="calendarPanel" header="Calendar" toggleable>
+      <Panel className="calendarPanel" header="Calendar">
         <Calendar className="Calendar" value={date} onChange={(e) => setDate(e.value)} inline showWeek />
       </Panel>
       </div>

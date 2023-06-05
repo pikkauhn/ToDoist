@@ -15,7 +15,19 @@ const TodoSchema = new mongoose.Schema({
     },
     completed: {
         type: Boolean,
-   }
+    },
+    important: {
+        type: Boolean,
+    },
+    hot: {
+        type: Boolean,
+    },
+    priority: {
+        type: Number,
+    },
+    ProjectID: {
+        type: Number,
+    }
 });
 
 const TodoModel = mongoose.model('Todo', TodoSchema);

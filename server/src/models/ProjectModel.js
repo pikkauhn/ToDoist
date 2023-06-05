@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
-    taskName: {
+    ProjectName: {
         type: String,
     },
-    taskDescription: {
+    ProjectDescription: {
         type: String,
     },
     dueDate: {
@@ -18,6 +18,9 @@ const ProjectSchema = new mongoose.Schema({
     },
     hot: {
         type: Boolean,
+    },
+    priority: {
+        type: Number,
     }
 });
 
