@@ -2,21 +2,22 @@ import ToDoApp from './Components/ToDoApp';
 import './theme.css';
 import "primereact/resources/primereact.min.css";   // Core
 import "primeicons/primeicons.css";
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import Login from './pages/LoginPage';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import Main from './Components/Main';
+import Signup from './Components/Signup';
+import Login from './Components/Login';
 
 
 function App() {
+  const user = localStorage.getItem("token");
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/LoginPortal" exact element={<Login />} />
-          <Route path="/ToDo" exact element={<ToDoApp />} />
-        </Routes>
-      </Router>
+    <Routes>
+      {user && <Route path="/" exact element={<ToDoApp />} />}
 
-    </div>
+      <Route path="/signup" exact element={<Signup />} />
+      <Route path="/Login" exact element={<Login />} />
+      <Route path="/" exact element={<Navigate replace to="/login" />} />
+    </Routes>
   );
 }
 

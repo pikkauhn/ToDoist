@@ -22,6 +22,11 @@ function ToDoApp() {
     { name: 'Monthly On Date' }
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+}
+
 
   return (
     <div>
@@ -64,6 +69,9 @@ function ToDoApp() {
         <Calendar className="Calendar" value={date} onChange={(e) => setDate(e.value)} inline showWeek />
       </Panel>
       </div>
+      <Button onClick={handleLogout}>
+                Logout
+            </Button>
     </div>
   );
 }
