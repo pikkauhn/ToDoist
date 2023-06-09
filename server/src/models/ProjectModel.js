@@ -21,6 +21,9 @@ const ProjectSchema = new mongoose.Schema({
     },
     priority: {
         type: Number,
+    },
+    UserID: {
+        type: Number,
     }
 });
 

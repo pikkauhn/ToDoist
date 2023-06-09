@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ToDoApp.css';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -6,72 +6,169 @@ import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Panel } from 'primereact/panel';
+import Navbar from './Navbar/Navbar';
+import NewTaskRequest from '../api/NewTaskRequest';
 
 function ToDoApp() {
-  const [toDoName, setToDoName] = useState('');
-  const [showDescription, setShowDescription] = useState(false);
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState(null);
-  const [frequency, setFrequency] = useState(null);
+
+  const [newTaskInfo, setNewTaskInfo] = useState({
+    taskName: undefined,
+    taskDescription: undefined,
+    taskDate: undefined,
+    taskFrequency: undefined,
+    taskImportant: undefined,
+    taskRanking: undefined,
+    taskHot: undefined,
+    taskProject: undefined,
+  });
+  const [newProjectInfo, setNewProjectInfo] = useState({
+    projectName: "",
+    projectDescription: "",
+    projectDate: undefined,
+    projectImportant: undefined,
+    projectRanking: undefined,
+    projectHot: undefined,
+  });
+  const [calendarInfo, setCalendarInfo] = useState({
+    calendarShow: true,
+  })
+
+  const [show, setShow] = useState({
+    "newProject": false,
+    "newTask": false,
+    "Calendar": true,
+    "Projects": true,
+    "Tasks": true,
+  })
+
+  const [showNewTaskDescription, setShowNewTaskDescription] = useState(false);
+  const [showNewProjectDescription, setShowNewProjectDescription] = useState(false);
   const frequencies = [
-    { name: 'Once' },
-    { name: 'Weekly' },
-    { name: 'Weekly On Day' },
-    { name: 'Bi-Weekly' },
-    { name: 'Bi-Weekly on Day' },
-    { name: 'Monthly On Date' }
+    'Once',
+    'Weekly',
+    'Weekly On Day',
+    'Bi-Weekly',
+    'Bi-Weekly on Day',
+    'Monthly On Date'
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
-}
+  const handleNewTaskChange = (event) => {
+    const { name, value } = event.target;
+    setNewTaskInfo({ ...newTaskInfo, [name]: value });
+  }
+  const handleNewProjectChange = (event) => {
+    const { name, value } = event.target;
+    setNewProjectInfo({ ...newProjectInfo, [name]: value });
+  }
 
+  const handleNav = (value) => {
+    setShow((prevShow) => {
+      return { ...prevShow, ...value }
+    })
+  }
+
+  const newTaskSubmit = async () => {
+    NewTaskRequest(newTaskInfo)
+    
+  }
 
   return (
     <div>
-      <h1>To Do Application</h1>
-      <div className="row1">
-      <Panel header="New Task" toggleable>
-      <div className={`card ${(!showDescription) ? 'slide-in' : 'slide-out'}`} id="newTaskCard">
-        <div id="addTask">
-          <span className="p-float-label">
-            <InputText id="taskName" value={toDoName} onChange={(e) => setToDoName(e.target.value)} />
-            <label htmlFor='taskName'>Task</label>
-          </span>
-          {(!showDescription) ? (
-            <Button id="addDescription" label="Add Description" onClick={() => {setShowDescription(true)}} />
-          ) : null}
-          <Calendar placeholder="Due Date" value={date} onChange={(e) => setDate(e.value)} />
-          <Dropdown
-            value={frequency}
-            onChange={(e) => setFrequency(e.value)}
-            options={frequencies}
-            optionLabel="name"
-            placeholder="Select Frequency"
-            className="w-full m:w-14rem"
-          />
-          <Button label="Add Task" />
-        </div>
-        <div className='desc'>
-          <InputTextarea
-            id="descriptionInput"
-            placeholder='Enter Description'
-            autoResize
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Button id="closeDescription" label="X" onClick={() => {setShowDescription(false)}} />
-        </div>
+      <div>
+        <Navbar onShow={handleNav} />
       </div>
-      </Panel>
-      <Panel className="calendarPanel" header="Calendar">
-        <Calendar className="Calendar" value={date} onChange={(e) => setDate(e.value)} inline showWeek />
-      </Panel>
+      <div className="row">
+        <div className="column1">
+          {/* Project Panel */}
+          {((show.newProject) ?
+            <Panel className="newPanel" header="New Project" toggleable collapsed>
+              <div className={`card ${(!showNewProjectDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+                <div id="addTask">
+                  <span className="p-float-label">
+                    <InputText id="projectName" name="projectName" value={newProjectInfo.projectName} onChange={handleNewProjectChange} />
+                    <label htmlFor='projectName'>Project</label>
+                  </span>
+                  {(!showNewProjectDescription) ? (
+                    <Button id="addProjectDescription" label="Add Description" onClick={() => { setShowNewProjectDescription(true) }} />
+                  ) : null}
+                  <Calendar name="projectDate" placeholder="Due Date" value={newProjectInfo.projectDate} onChange={handleNewProjectChange} />
+                  <Button label="Add Project" />
+                </div>
+                <div className='desc'>
+                  <InputTextarea
+                    id="descriptionInput"
+                    name="projectDescription"
+                    placeholder='Enter Description'
+                    autoResize
+                    value={newProjectInfo.NewProjectDescription}
+                    onChange={handleNewProjectChange}
+                  />
+                  <Button id="closeDescription" label="X" onClick={() => { setShowNewProjectDescription(false) }} />
+                </div>
+              </div>
+            </Panel>
+            : null)}
+
+          {/* Task Panel */}
+          {((show.newTask) ?
+            <Panel className="newPanel" header="New Task" toggleable collapsed>
+              <div className={`card ${(!showNewTaskDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+                <div id="addTask">
+                  <span className="p-float-label">
+                    <InputText
+                      id="taskName"
+                      name='taskName'
+                      onChange={handleNewTaskChange}
+                      value={newTaskInfo.taskName} />
+                    <label htmlFor='taskName'>Task</label>
+                  </span>
+                  {(!showNewTaskDescription) ? (
+                    <Button id="addDescription" label="Add Description" onClick={() => { setShowNewTaskDescription(true) }} />
+                  ) : null}
+                  <Calendar name='taskDate' placeholder="Due Date" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} />
+                  <Dropdown
+                    name='taskFrequency'
+                    value={newTaskInfo.taskFrequency}
+                    onChange={handleNewTaskChange}
+                    options={frequencies}
+                    placeholder="Select Frequency"
+                    className="w-full m:w-14rem"
+                  />
+                  <Button label="Add Task" onClick={newTaskSubmit} />
+                </div>
+                <div className='desc'>
+                  <InputTextarea
+                    name="taskDescription"
+                    id="descriptionInput"
+                    placeholder='Enter Description'
+                    autoResize
+                    value={newTaskInfo.taskDescription}
+                    onChange={handleNewTaskChange}
+                  />
+                  <Button id="closeDescription" label="X" onClick={() => { setShowNewTaskDescription(false) }} />
+                </div>
+              </div>
+            </Panel>
+            : null)}
+          {((show.Tasks) ?
+            <Panel className='newPanel' header='Projects' toggleable>
+
+            </Panel>
+            : null)}
+          {((show.Projects) ?
+            <Panel className='newPanel' header='Tasks' toggleable>
+
+            </Panel>
+            : null)}
+        </div>
+        {/* Calendar Panel */}
+        {((show.Calendar) ?
+          <Panel className="calendarPanel" header="Calendar">
+            <Calendar name="taskDate" className="Calendar" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} inline showWeek />
+          </Panel>
+          : null)}
       </div>
-      <Button onClick={handleLogout}>
-                Logout
-            </Button>
+
     </div>
   );
 }

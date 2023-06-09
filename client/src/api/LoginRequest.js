@@ -1,11 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
 
-function LoginRequest(username, password) {
-
-const creds = {
-    "password" : password
-}
+function LoginRequest(creds) {
 
     const credCheck = async (password) => {
         console.log(password)

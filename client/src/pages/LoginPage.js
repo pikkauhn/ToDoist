@@ -3,22 +3,31 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import LoginRequest from '../api/LoginRequest';
-        
+
 
 function Login() {
 
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+  const [creds, setCreds] = useState({
+    "username": "",
+    "password": ""
+  })
 
-    const login = async () => {
-      await LoginRequest(userName, password)
-    }
+  const handleChange = (e) => {
+    const { name, value } = (e.target);
+    setCreds({ ...creds, [name]: value });
+  }
+
+  const login = async () => {
+    await LoginRequest(creds).then((response) => {
+      console.log(response)
+    })
+  }
 
   return (
     <div>
-        <InputText placeholder='Enter Username' value={userName} onChange={(e) => setUserName(e.target.value)} />
-        <Password placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} />
-        <Button label="Submit" onClick={login}/>
+      <InputText name="username" placeholder='Enter Username' value={creds.username} onChange={handleChange} />
+      <Password password="password" placeholder='Enter Password' value={creds.password} onChange={handleChange} feedback={false} />
+      <Button label="Submit" onClick={login} />
     </div>
   )
 }

@@ -27,6 +27,9 @@ const TodoSchema = new mongoose.Schema({
     },
     ProjectID: {
         type: Number,
+    },
+    UserID: {
+        type: Number,
     }
 });
 

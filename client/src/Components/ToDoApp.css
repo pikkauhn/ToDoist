@@ -1,23 +1,32 @@
-.row1 {
+.row {
     display: flex;
     justify-content: space-between;
+    height: 0vh;   
 }
 
-.newTaskPanel {
+.row2 {
+    display: flex;
+    justify-content: space-between;
+    height: 0vh;
+}
+
+.column1 {
+    max-height: 10vh;
+}
+
+.newPanel {
     width: 52vw;
     max-height: 100vh;
 }
 
-#newTaskCard {
+#newCard {
     width: 50vw;
     overflow-y: hidden;
-    height: 50vh;
     transition: max-height .2s linear;
 }
 
 #addTask {
     display: flex;
-    overflow: hidden;
     justify-content: space-between;
 }
 
