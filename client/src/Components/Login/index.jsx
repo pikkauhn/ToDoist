@@ -1,8 +1,8 @@
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 
 function Signup() {
 
@@ -22,7 +22,7 @@ function Signup() {
             const url = "http://localhost:3001/api/auth";
             const { data: res } = await Axios.post(url, data);
             localStorage.setItem("token", res.data);
-            window.location = "/";
+            window.location = '/?user=' + encodeURIComponent(JSON.stringify(res.user));
         } catch (error) {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
                 setError(error.response.data.message)

@@ -1,10 +1,10 @@
 import React from 'react';
 import Axios from 'axios';
 
-function NewTaskRequest(task) {
+function NewTaskRequest(user) {
 
     const newTask = async () => {
-    Axios.post("http://localhost:3001/todos", task).then((response) => {
+    Axios.get("http://localhost:3001/todos", user).then((response) => {
         console.log(response.data);
     })
     }      

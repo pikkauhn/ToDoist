@@ -10,8 +10,9 @@ module.exports = (req, res, next) => {
         jwt.verify(token, process.env.SECRET, (err, decoded) => {
             if (err) {
                 res.status(403).send('invalid credentials');
-            } else {
-                next();
+            } else {         
+                const user = decoded._id;       
+                next(user);
             }
         })
     }

@@ -8,11 +8,17 @@ import { Dropdown } from 'primereact/dropdown';
 import { Panel } from 'primereact/panel';
 import Navbar from './Navbar/Navbar';
 import NewTaskRequest from '../api/NewTaskRequest';
+import getTasks from '../api/GetTasksRequest';
+import { useLocation } from 'react-router-dom';
 
-function ToDoApp() {
+
+function ToDoApp(token) {
+  
+  
 
   const [newTaskInfo, setNewTaskInfo] = useState({
-    taskName: undefined,
+    // taskUser: user,
+    taskName: "",
     taskDescription: undefined,
     taskDate: undefined,
     taskFrequency: undefined,
@@ -20,18 +26,18 @@ function ToDoApp() {
     taskRanking: undefined,
     taskHot: undefined,
     taskProject: undefined,
+    taskComplete: undefined,
   });
   const [newProjectInfo, setNewProjectInfo] = useState({
+    // projectUser: user,
     projectName: "",
     projectDescription: "",
     projectDate: undefined,
     projectImportant: undefined,
     projectRanking: undefined,
     projectHot: undefined,
+    projectComplete: undefined,
   });
-  const [calendarInfo, setCalendarInfo] = useState({
-    calendarShow: true,
-  })
 
   const [show, setShow] = useState({
     "newProject": false,
@@ -68,8 +74,9 @@ function ToDoApp() {
   }
 
   const newTaskSubmit = async () => {
-    NewTaskRequest(newTaskInfo)
-    
+    NewTaskRequest(newTaskInfo);
+    // console.log(newTaskInfo)
+
   }
 
   return (
@@ -118,8 +125,8 @@ function ToDoApp() {
                     <InputText
                       id="taskName"
                       name='taskName'
-                      onChange={handleNewTaskChange}
-                      value={newTaskInfo.taskName} />
+                      value={newTaskInfo.taskName}
+                      onChange={handleNewTaskChange} />
                     <label htmlFor='taskName'>Task</label>
                   </span>
                   {(!showNewTaskDescription) ? (
