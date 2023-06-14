@@ -7,8 +7,8 @@ const deleteTodoRoute = require('./routes/deleteTodoRoute');
 
 const router = express.Router();
 
-router.get('/todos/:id', isLoggedIn, readTodosRoute);
-router.post('/todos/:id', isLoggedIn, createTodosRoute);
+router.get('/todos', isLoggedIn, readTodosRoute);
+router.post('/todos', isLoggedIn, createTodosRoute);
 router.put('/todos/:id', isLoggedIn, updateTodosRoute);
 router.delete('/todos/:id', isLoggedIn, deleteTodoRoute);
 

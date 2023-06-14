@@ -9,15 +9,30 @@ import { Panel } from 'primereact/panel';
 import Navbar from './Navbar/Navbar';
 import NewTaskRequest from '../api/NewTaskRequest';
 import getTasks from '../api/GetTasksRequest';
-import { useLocation } from 'react-router-dom';
 
 
-function ToDoApp(token) {
-  
-  
+function ToDoApp() {
+
+  const [taskList, setTaskList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tasks = await getTasks();
+        setTaskList(tasks);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    console.log(taskList)
+  }, [taskList])
 
   const [newTaskInfo, setNewTaskInfo] = useState({
-    // taskUser: user,
     taskName: "",
     taskDescription: undefined,
     taskDate: undefined,
@@ -29,7 +44,6 @@ function ToDoApp(token) {
     taskComplete: undefined,
   });
   const [newProjectInfo, setNewProjectInfo] = useState({
-    // projectUser: user,
     projectName: "",
     projectDescription: "",
     projectDate: undefined,

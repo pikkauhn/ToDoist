@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 import Axios from 'axios'
 import { Link} from 'react-router-dom'
+import { setAuthToken } from './setAuthToken'
 
 function Signup() {
 
@@ -22,7 +23,8 @@ function Signup() {
             const url = "http://localhost:3001/api/auth";
             const { data: res } = await Axios.post(url, data);
             localStorage.setItem("token", res.data);
-            window.location = '/?user=' + encodeURIComponent(JSON.stringify(res.user));
+            setAuthToken(res.data);
+            window.location.href = '/';
         } catch (error) {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
                 setError(error.response.data.message)

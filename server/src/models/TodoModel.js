@@ -1,3 +1,4 @@
+const { date } = require('joi');
 const mongoose = require('mongoose');
 
 const TodoSchema = new mongoose.Schema({
@@ -7,29 +8,30 @@ const TodoSchema = new mongoose.Schema({
     taskDescription: {
         type: String,
     },
-    dueDate: {
+    taskDate: {
+        type: Date,
+    },
+    taskFrequency: {
         type: String,
     },
-    Frequency: {
+    
+    taskImportant: {
+        type: Boolean,
+    },
+    taskHot: {
+        type: Boolean,
+    },
+    taskPriority: {
+        type: Number,
+    },
+    taskComplete: {
+        type: Boolean,
+    },
+    taskProject: {
+        type: Number,
+    },
+    taskUser: {
         type: String,
-    },
-    completed: {
-        type: Boolean,
-    },
-    important: {
-        type: Boolean,
-    },
-    hot: {
-        type: Boolean,
-    },
-    priority: {
-        type: Number,
-    },
-    ProjectID: {
-        type: Number,
-    },
-    UserID: {
-        type: Number,
     }
 });
 

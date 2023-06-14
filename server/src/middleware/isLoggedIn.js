@@ -6,13 +6,13 @@ module.exports = (req, res, next) => {
     if (!authHeader) {
         res.status(401).send('invalid credentials');
     } else {
-        const token = authHeader.split(' ')[1];
-        jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        const token = authHeader.slice(7,authHeader.length);
+        jwt.verify(token, process.env.JWTPRIVATEKEY, (err, decoded) => {
             if (err) {
-                res.status(403).send('invalid credentials');
-            } else {         
-                const user = decoded._id;       
-                next(user);
+                console.log(err)
+            } else {
+                req.user = decoded._id;   
+                next();
             }
         })
     }

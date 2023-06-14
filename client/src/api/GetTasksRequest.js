@@ -1,14 +1,14 @@
 import React from 'react';
 import Axios from 'axios';
 
-function NewTaskRequest(user) {
-
-    const newTask = async () => {
-    Axios.get("http://localhost:3001/todos", user).then((response) => {
-        console.log(response.data);
+function GetTasksRequest() {    
+    const getTasks = async () => {
+    Axios.get("http://localhost:3001/todos").then((response) => {
+        const tasks = response.data;
+        console.log(tasks)
     })
-    }      
-    newTask();
+    }     
+    getTasks() 
 }
 
-export default NewTaskRequest
+export default GetTasksRequest
