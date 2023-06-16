@@ -1,7 +1,7 @@
 .row {
     display: flex;
     justify-content: space-between;
-    height: 0vh;   
+    height: 0vh;
 }
 
 .row2 {
@@ -44,7 +44,7 @@
 }
 
 .p-panel {
-    max-width: 52vw;
+    
 }
 
 #descriptionInput {
@@ -57,10 +57,56 @@
 }
 
 .calendarPanel {
-    width: 40vw;
+    width: 30vw;
 }
 
 .Calendar {
     width: 40vw;
     max-height: 50vh;
+}
+
+.taskPanel {
+    margin-top: 40vh;
+    width: 60vw;
+    max-width: 52vw;
+    position: absolute;
+}
+
+.taskScrollPanel {
+    height: 30vh;
+    padding: 0;
+    margin: 0;
+}
+
+.acc {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#test {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+#test2 {
+    overflow: hidden;
+}
+
+.accName {
+    width: 35vw;
+    margin-top: .5vh;
+}
+
+.date {
+    margin-top: .5vh;
+    width: 5vw;
+}
+
+.accIcon {
+    color: #a5b4fc;   
+    &:hover {
+        color: Green;
+        background-color: #040d19;
+    }
 }

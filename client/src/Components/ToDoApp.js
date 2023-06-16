@@ -6,31 +6,32 @@ import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Panel } from 'primereact/panel';
+import { ScrollPanel } from 'primereact/scrollpanel';
+import { Card } from 'primereact/card';
 import Navbar from './Navbar/Navbar';
 import NewTaskRequest from '../api/NewTaskRequest';
-import getTasks from '../api/GetTasksRequest';
-
+import Axios from 'axios';
+import { Accordion, AccordionTab } from 'primereact/accordion';        
 
 function ToDoApp() {
-
   const [taskList, setTaskList] = useState([]);
+  const [loadData, setLoadData] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getTasks = async () => {
       try {
-        const tasks = await getTasks();
-        setTaskList(tasks);
+        const response = await Axios.get("http://localhost:3001/todos");
+        const tasksData = response.data;
+        setTaskList(tasksData);
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching tasks: ", err);
       }
     };
-
-    fetchData();
-  }, [])
-
-  useEffect(() => {
-    console.log(taskList)
-  }, [taskList])
+    if (loadData) {
+      getTasks();
+      setLoadData(false);
+    }
+  }, [loadData]);
 
   const [newTaskInfo, setNewTaskInfo] = useState({
     taskName: "",
@@ -72,6 +73,29 @@ function ToDoApp() {
     'Monthly On Date'
   ];
 
+  const renderHeader = (task) => {
+    const date = new Date(task.taskDate);
+    const month = (date.getMonth());
+    const day = (date.getDate());
+    const year = (date.getFullYear());
+    return (
+        <div className='acc'>
+          <div className='accName'>{task.taskName}</div>
+          <div className='date'>{month}-{day}-{year}</div>
+          <i id="test" name={`important ${task._id}`} className='accIcon pi pi-flag' onClick={handleClick}></i>
+          <i id="test" name={`hot ${task._id}`} className='accIcon pi pi-bolt' onClick={handleClick}></i>
+          <i id="test" name={`complete ${task._id}`} className='accIcon pi pi-check' onClick={handleClick}></i>
+        </div>
+    )
+  }
+
+  const handleClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const name = event.target.getAttribute('name');
+    console.log(name)
+  }
+
   const handleNewTaskChange = (event) => {
     const { name, value } = event.target;
     setNewTaskInfo({ ...newTaskInfo, [name]: value });
@@ -88,9 +112,8 @@ function ToDoApp() {
   }
 
   const newTaskSubmit = async () => {
-    NewTaskRequest(newTaskInfo);
-    // console.log(newTaskInfo)
-
+    await NewTaskRequest(newTaskInfo)
+    setLoadData(true);
   }
 
   return (
@@ -171,16 +194,13 @@ function ToDoApp() {
               </div>
             </Panel>
             : null)}
-          {((show.Tasks) ?
+
+          {((show.Projects) ?
             <Panel className='newPanel' header='Projects' toggleable>
 
             </Panel>
             : null)}
-          {((show.Projects) ?
-            <Panel className='newPanel' header='Tasks' toggleable>
-
-            </Panel>
-            : null)}
+          
         </div>
         {/* Calendar Panel */}
         {((show.Calendar) ?
@@ -189,7 +209,20 @@ function ToDoApp() {
           </Panel>
           : null)}
       </div>
+      {((show.Tasks) ?
+            <Panel className="taskPanel" header='Tasks' toggleable>
+              <ScrollPanel className='taskScrollPanel'>
+                <Accordion>
+                  {taskList.map((task) => (
+                    <AccordionTab id='test2' className='taskCard' key={task.taskName} header={renderHeader(task)}>
+                      <ul>{task.taskDescription}</ul>
+                    </AccordionTab>
+                  ))}
+                </Accordion>
 
+              </ScrollPanel>
+            </Panel>
+            : null)}
     </div>
   );
 }

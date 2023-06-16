@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menubar } from 'primereact/menubar';
 import { InputText } from 'primereact/inputtext';
+import 'primeicons/primeicons.css'
 
 function Navbar({ onShow }) {
 
