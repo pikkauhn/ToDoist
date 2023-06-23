@@ -7,17 +7,28 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Panel } from 'primereact/panel';
 import { ScrollPanel } from 'primereact/scrollpanel';
-import { Card } from 'primereact/card';
 import Navbar from './Navbar/Navbar';
 import NewTaskRequest from '../api/NewTaskRequest';
 import Axios from 'axios';
-import { Accordion, AccordionTab } from 'primereact/accordion';        
+import { Accordion, AccordionTab } from 'primereact/accordion';
 
 function ToDoApp() {
   const [taskList, setTaskList] = useState([]);
+  const [settings, setSettings] = useState([]);
   const [loadData, setLoadData] = useState(true);
 
   useEffect(() => {
+    const createSettings = async () => {
+      try {
+        const response = await Axios.post("http://localhost:3001/settings");
+        const userSettings = response.data;
+        if (!userSettings.message) {
+          setSettings(response.data);
+        }
+      } catch (err) {
+        console.error("Error creating settings: ", err);
+      }
+    };
     const getTasks = async () => {
       try {
         const response = await Axios.get("http://localhost:3001/todos");
@@ -27,11 +38,26 @@ function ToDoApp() {
         console.error("Error fetching tasks: ", err);
       }
     };
+    const getSettings = async () => {
+      try {
+        const response = await Axios.get("http://localhost:3001/settings");
+        const userSettings = response.data;
+        setSettings(userSettings);
+      } catch (err) {
+        console.error("Error fetching user Settings: ", err);
+      }
+    };
     if (loadData) {
+      createSettings();
+      getSettings();
       getTasks();
       setLoadData(false);
     }
   }, [loadData]);
+
+  useEffect(() => {
+    console.log(settings[0]);
+  }, [settings])
 
   const [newTaskInfo, setNewTaskInfo] = useState({
     taskName: "",
@@ -79,13 +105,13 @@ function ToDoApp() {
     const day = (date.getDate());
     const year = (date.getFullYear());
     return (
-        <div className='acc'>
-          <div className='accName'>{task.taskName}</div>
-          <div className='date'>{month}-{day}-{year}</div>
-          <i id="test" name={`important ${task._id}`} className='accIcon pi pi-flag' onClick={handleClick}></i>
-          <i id="test" name={`hot ${task._id}`} className='accIcon pi pi-bolt' onClick={handleClick}></i>
-          <i id="test" name={`complete ${task._id}`} className='accIcon pi pi-check' onClick={handleClick}></i>
-        </div>
+      <div className='acc'>
+        <div className='accName'>{task.taskName}</div>
+        <div className='date'>{month}-{day}-{year}</div>
+        <i id="icon" name={`important ${task._id}`} className='accIcon pi pi-flag' onClick={handleClick}></i>
+        <i id="icon" name={`hot ${task._id}`} className='accIcon pi pi-bolt' onClick={handleClick}></i>
+        <i id="icon" name={`complete ${task._id}`} className='accIcon pi pi-check' onClick={handleClick}></i>
+      </div>
     )
   }
 
@@ -195,12 +221,8 @@ function ToDoApp() {
             </Panel>
             : null)}
 
-          {((show.Projects) ?
-            <Panel className='newPanel' header='Projects' toggleable>
 
-            </Panel>
-            : null)}
-          
+
         </div>
         {/* Calendar Panel */}
         {((show.Calendar) ?
@@ -209,20 +231,34 @@ function ToDoApp() {
           </Panel>
           : null)}
       </div>
-      {((show.Tasks) ?
-            <Panel className="taskPanel" header='Tasks' toggleable>
-              <ScrollPanel className='taskScrollPanel'>
-                <Accordion>
-                  {taskList.map((task) => (
-                    <AccordionTab id='test2' className='taskCard' key={task.taskName} header={renderHeader(task)}>
-                      <ul>{task.taskDescription}</ul>
-                    </AccordionTab>
-                  ))}
-                </Accordion>
+      {((show.Projects) ?
+        <Panel className='newPanel' header='Projects' toggleable>
+          <ScrollPanel className='taskScrollPanel'>
+            <Accordion>
+              {taskList.map((task) => (
+                <AccordionTab className='taskCard' key={task.taskName} header={renderHeader(task)}>
+                  <ul>{task.taskDescription}</ul>
+                </AccordionTab>
+              ))}
+            </Accordion>
 
-              </ScrollPanel>
-            </Panel>
-            : null)}
+          </ScrollPanel>
+        </Panel>
+        : null)}
+      {((show.Tasks) ?
+        <Panel className="taskPanel" header='Tasks' toggleable>
+          <ScrollPanel className='taskScrollPanel'>
+            <Accordion>
+              {taskList.map((task) => (
+                <AccordionTab className='taskCard' key={task.taskName} header={renderHeader(task)}>
+                  <ul>{task.taskDescription}</ul>
+                </AccordionTab>
+              ))}
+            </Accordion>
+
+          </ScrollPanel>
+        </Panel>
+        : null)}
     </div>
   );
 }

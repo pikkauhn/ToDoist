@@ -30,7 +30,7 @@ const TodoSchema = new mongoose.Schema({
     taskProject: {
         type: Number,
     },
-    taskUser: {
+    UserID: {
         type: String,
     }
 });

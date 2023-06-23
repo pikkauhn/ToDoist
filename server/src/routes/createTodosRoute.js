@@ -1,7 +1,7 @@
 const TodoModel = require('../models/TodoModel')
 
 module.exports = async (req, res) => {
-    const taskUser = req.user;
+    const UserID = req.user;
     const taskName = req.body.taskName;
     const taskDescription = req.body.taskDescription;
     const taskDate = req.body.taskDate;
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
         taskHot,
         taskProject,
         taskComplete,
-        taskUser,
+        UserID,
     });
     const newTodo = await todo.save();
     res.json(newTodo);
