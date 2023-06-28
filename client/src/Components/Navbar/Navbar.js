@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Menubar } from 'primereact/menubar';
 import { InputText } from 'primereact/inputtext';
-import 'primeicons/primeicons.css'
+import Axios from 'axios';
+import 'primeicons/primeicons.css';
 
 function Navbar({ onShow }) {
+
+    const [settings, setSettings] = useState([]);
 
     const [show, setShow] = useState({
         "newProject": false,
@@ -14,8 +17,30 @@ function Navbar({ onShow }) {
     });
 
     useEffect(() => {
-        onShow(show)
-    }, [show]);
+        const createSettings = async () => {
+            try {
+                const response = await Axios.post("http://localhost:3001/settings");
+                const userSettings = response.data;
+                if (!userSettings.message) {
+                    setSettings(response.data);
+                }
+            } catch (err) {
+                console.error("Error creating settings: ", err);
+            }
+        };
+        const getSettings = async () => {
+            try {
+                const response = await Axios.get("http://localhost:3001/settings");
+                const userSettings = response.data;
+                setSettings(userSettings);
+            } catch (err) {
+                console.error("Error fetching user Settings: ", err);
+            }
+        };
+        onShow(show);
+        createSettings();
+        getSettings();
+    }, [show])
 
     const handleChange = (event) => {
         const name = event.item.name;

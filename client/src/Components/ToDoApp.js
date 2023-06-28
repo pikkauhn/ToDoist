@@ -14,50 +14,30 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 
 function ToDoApp() {
   const [taskList, setTaskList] = useState([]);
-  const [settings, setSettings] = useState([]);
   const [loadData, setLoadData] = useState(true);
 
   useEffect(() => {
-    const createSettings = async () => {
-      try {
-        const response = await Axios.post("http://localhost:3001/settings");
-        const userSettings = response.data;
-        if (!userSettings.message) {
-          setSettings(response.data);
-        }
-      } catch (err) {
-        console.error("Error creating settings: ", err);
-      }
-    };
+
     const getTasks = async () => {
       try {
         const response = await Axios.get("http://localhost:3001/todos");
         const tasksData = response.data;
+        console.log(response)
         setTaskList(tasksData);
       } catch (err) {
         console.error("Error fetching tasks: ", err);
       }
     };
-    const getSettings = async () => {
-      try {
-        const response = await Axios.get("http://localhost:3001/settings");
-        const userSettings = response.data;
-        setSettings(userSettings);
-      } catch (err) {
-        console.error("Error fetching user Settings: ", err);
-      }
-    };
+
     if (loadData) {
-      createSettings();
-      getSettings();
       getTasks();
       setLoadData(false);
     }
   }, [loadData]);
 
   useEffect(() => {
-    console.log(settings[0]);
-  }, [settings])
+    console.log(taskList);
+  }, [taskList])
 
   const [newTaskInfo, setNewTaskInfo] = useState({
     taskName: "",
@@ -149,10 +129,21 @@ function ToDoApp() {
       </div>
       <div className="row">
         <div className="column1">
-          {/* Project Panel */}
-          {((show.newProject) ?
+
+         
+        </div>
+
+        {/* Calendar Panel */}
+        {((show.Calendar) ?
+          <Panel className="calendarPanel" header="Calendar">
+            <Calendar name="taskDate" className="Calendar" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} inline showWeek />
+          </Panel>
+          : null)}
+      </div>
+ {/* New Project Panel */}
+ {((show.newProject) ?
             <Panel className="newPanel" header="New Project" toggleable collapsed>
-              <div className={`card ${(!showNewProjectDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+              <div className={`${(!showNewProjectDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
                 <div id="addTask">
                   <span className="p-float-label">
                     <InputText id="projectName" name="projectName" value={newProjectInfo.projectName} onChange={handleNewProjectChange} />
@@ -179,10 +170,10 @@ function ToDoApp() {
             </Panel>
             : null)}
 
-          {/* Task Panel */}
+          {/* New Task Panel */}
           {((show.newTask) ?
             <Panel className="newPanel" header="New Task" toggleable collapsed>
-              <div className={`card ${(!showNewTaskDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+              <div className={`${(!showNewTaskDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
                 <div id="addTask">
                   <span className="p-float-label">
                     <InputText
@@ -220,19 +211,9 @@ function ToDoApp() {
               </div>
             </Panel>
             : null)}
-
-
-
-        </div>
-        {/* Calendar Panel */}
-        {((show.Calendar) ?
-          <Panel className="calendarPanel" header="Calendar">
-            <Calendar name="taskDate" className="Calendar" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} inline showWeek />
-          </Panel>
-          : null)}
-      </div>
+      {/* Project Panel */}
       {((show.Projects) ?
-        <Panel className='newPanel' header='Projects' toggleable>
+        <Panel className='projectPanel' header='Projects' toggleable>
           <ScrollPanel className='taskScrollPanel'>
             <Accordion>
               {taskList.map((task) => (
@@ -241,10 +222,11 @@ function ToDoApp() {
                 </AccordionTab>
               ))}
             </Accordion>
-
           </ScrollPanel>
         </Panel>
         : null)}
+
+      {/* Task Panel */}
       {((show.Tasks) ?
         <Panel className="taskPanel" header='Tasks' toggleable>
           <ScrollPanel className='taskScrollPanel'>
@@ -255,7 +237,6 @@ function ToDoApp() {
                 </AccordionTab>
               ))}
             </Accordion>
-
           </ScrollPanel>
         </Panel>
         : null)}

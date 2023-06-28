@@ -1,6 +1,3 @@
-* {
-    outline: none;
-}
 
 .row {
     display: flex;
@@ -19,8 +16,8 @@
 }
 
 .newPanel {
+    position: relative;
     width: 52vw;
-    max-height: 100vh;
 }
 
 #newCard {
@@ -44,11 +41,7 @@
 }
 
 .slide-in {
-    max-height: 10vh;
-}
-
-.p-panel {
-    
+    max-height: 4vh;
 }
 
 #descriptionInput {
@@ -66,17 +59,26 @@
 
 .Calendar {
     width: 40vw;
-    max-height: 50vh;
+    max-height: 35vh;
+}
+
+.projectPanel {
+    width: 60vw;
+    max-width: 52vw;
 }
 
 .taskPanel {
-    margin-top: 0vh;
     width: 60vw;
     max-width: 52vw;
-    position: absolute;
+}
+
+.taskCard {
+    position: relative;
+    z-index: 0;
 }
 
 .taskScrollPanel {
+    position: relative;
     height: 31vh;
     padding: 0;
     margin: 0;
