@@ -28,6 +28,13 @@ function ToDoApp() {
         console.error("Error fetching tasks: ", err);
       }
     };
+    const getProjects = async () => {
+      try {
+        const response = await Axios.get("http://localhost:3001/todos")
+      } catch (err) {
+        console.error("Error fetching tasks: ", err);
+      }
+    }
 
     if (loadData) {
       getTasks();

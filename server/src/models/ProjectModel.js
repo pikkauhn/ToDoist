@@ -1,25 +1,25 @@
 const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
-    ProjectName: {
+    projectName: {
         type: String,
     },
-    ProjectDescription: {
+    projectDescription: {
         type: String,
     },
-    dueDate: {
+    projectDate: {
         type: String,
     },
-    completed: {
+    projectCompleted: {
         type: Boolean,
     },
-    important: {
+    projectImportant: {
         type: Boolean,
     },
-    hot: {
+    projectHot: {
         type: Boolean,
     },
-    priority: {
+    projectPriority: {
         type: Number,
     },
     UserID: {
@@ -29,4 +29,4 @@ const ProjectSchema = new mongoose.Schema({
 
 const ProjectModel = mongoose.model('Project', ProjectSchema);
 
-module.exports = PojectModel;
+module.exports = ProjectModel;

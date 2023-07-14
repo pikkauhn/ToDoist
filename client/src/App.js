@@ -14,11 +14,10 @@ function App() {
   };
   return (
     <Routes>
-      {token && <Route path="/" exact element={<ToDoApp />} />}
-
+      <Route path="/" exact element={token ? <ToDoApp /> : <Login />} />
       <Route path="/signup" exact element={<Signup />} />
       <Route path="/Login" exact element={<Login />} />
-      <Route path="/" exact element={<Navigate replace to="/login" />} />
+      <Route path="/" exact element={<Navigate replace to="/Login" />} />
     </Routes>
   );
 }
