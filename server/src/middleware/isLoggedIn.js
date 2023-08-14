@@ -8,10 +8,12 @@ module.exports = (req, res, next) => {
     } else {
         const token = authHeader.slice(7,authHeader.length);
         jwt.verify(token, process.env.JWTPRIVATEKEY, (err, decoded) => {
-            if (err) {
-                console.log(err)
+            if (err) {           
+                // console.log(err);
+                req.err = err;
+                next();
             } else {
-                req.user = decoded._id;   
+                req.user = decoded._id;                   
                 next();
             }
         })

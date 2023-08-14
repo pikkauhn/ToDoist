@@ -11,10 +11,12 @@ import Navbar from './Navbar/Navbar';
 import NewTaskRequest from '../api/NewTaskRequest';
 import Axios from 'axios';
 import { Accordion, AccordionTab } from 'primereact/accordion';
+import { useNavigate } from 'react-router-dom';
 
 function ToDoApp() {
   const [taskList, setTaskList] = useState([]);
   const [loadData, setLoadData] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -22,11 +24,16 @@ function ToDoApp() {
       try {
         const response = await Axios.get("http://localhost:3001/todos");
         const tasksData = response.data;
-        console.log(response)
-        setTaskList(tasksData);
+        if (response.data.expiredAt) {
+          alert("Session Expired. Please Log In Again");
+          navigate("/Login");
+        } else {
+          setTaskList(tasksData);
+        }
       } catch (err) {
         console.error("Error fetching tasks: ", err);
       }
+
     };
     const getProjects = async () => {
       try {
@@ -35,27 +42,22 @@ function ToDoApp() {
         console.error("Error fetching tasks: ", err);
       }
     }
-
     if (loadData) {
       getTasks();
       setLoadData(false);
     }
   }, [loadData]);
 
-  useEffect(() => {
-    console.log(taskList);
-  }, [taskList])
-
   const [newTaskInfo, setNewTaskInfo] = useState({
     taskName: "",
     taskDescription: undefined,
     taskDate: undefined,
     taskFrequency: undefined,
-    taskImportant: undefined,
+    taskImportant: false,
     taskRanking: undefined,
-    taskHot: undefined,
+    taskHot: false,
     taskProject: undefined,
-    taskComplete: undefined,
+    taskComplete: false,
   });
   const [newProjectInfo, setNewProjectInfo] = useState({
     projectName: "",
@@ -102,11 +104,20 @@ function ToDoApp() {
     )
   }
 
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     event.stopPropagation();
     event.preventDefault();
     const name = event.target.getAttribute('name');
-    console.log(name)
+    const info = name.split(" ");
+    const type = info[0];
+    try {
+    await Axios.put(`http://localhost:3001/todos/${info[1]}`, { type }).then((response) => {
+      const result = response.data;
+      console.log(result);
+    })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleNewTaskChange = (event) => {
@@ -137,7 +148,7 @@ function ToDoApp() {
       <div className="row">
         <div className="column1">
 
-         
+
         </div>
 
         {/* Calendar Panel */}
@@ -147,77 +158,77 @@ function ToDoApp() {
           </Panel>
           : null)}
       </div>
- {/* New Project Panel */}
- {((show.newProject) ?
-            <Panel className="newPanel" header="New Project" toggleable collapsed>
-              <div className={`${(!showNewProjectDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
-                <div id="addTask">
-                  <span className="p-float-label">
-                    <InputText id="projectName" name="projectName" value={newProjectInfo.projectName} onChange={handleNewProjectChange} />
-                    <label htmlFor='projectName'>Project</label>
-                  </span>
-                  {(!showNewProjectDescription) ? (
-                    <Button id="addProjectDescription" label="Add Description" onClick={() => { setShowNewProjectDescription(true) }} />
-                  ) : null}
-                  <Calendar name="projectDate" placeholder="Due Date" value={newProjectInfo.projectDate} onChange={handleNewProjectChange} />
-                  <Button label="Add Project" />
-                </div>
-                <div className='desc'>
-                  <InputTextarea
-                    id="descriptionInput"
-                    name="projectDescription"
-                    placeholder='Enter Description'
-                    autoResize
-                    value={newProjectInfo.NewProjectDescription}
-                    onChange={handleNewProjectChange}
-                  />
-                  <Button id="closeDescription" label="X" onClick={() => { setShowNewProjectDescription(false) }} />
-                </div>
-              </div>
-            </Panel>
-            : null)}
+      {/* New Project Panel */}
+      {((show.newProject) ?
+        <Panel className="newPanel" header="New Project" toggleable collapsed>
+          <div className={`${(!showNewProjectDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+            <div id="addTask">
+              <span className="p-float-label">
+                <InputText id="projectName" name="projectName" value={newProjectInfo.projectName} onChange={handleNewProjectChange} />
+                <label htmlFor='projectName'>Project</label>
+              </span>
+              {(!showNewProjectDescription) ? (
+                <Button id="addProjectDescription" label="Add Description" onClick={() => { setShowNewProjectDescription(true) }} />
+              ) : null}
+              <Calendar name="projectDate" placeholder="Due Date" value={newProjectInfo.projectDate} onChange={handleNewProjectChange} />
+              <Button label="Add Project" />
+            </div>
+            <div className='desc'>
+              <InputTextarea
+                id="descriptionInput"
+                name="projectDescription"
+                placeholder='Enter Description'
+                autoResize
+                value={newProjectInfo.NewProjectDescription}
+                onChange={handleNewProjectChange}
+              />
+              <Button id="closeDescription" label="X" onClick={() => { setShowNewProjectDescription(false) }} />
+            </div>
+          </div>
+        </Panel>
+        : null)}
 
-          {/* New Task Panel */}
-          {((show.newTask) ?
-            <Panel className="newPanel" header="New Task" toggleable collapsed>
-              <div className={`${(!showNewTaskDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
-                <div id="addTask">
-                  <span className="p-float-label">
-                    <InputText
-                      id="taskName"
-                      name='taskName'
-                      value={newTaskInfo.taskName}
-                      onChange={handleNewTaskChange} />
-                    <label htmlFor='taskName'>Task</label>
-                  </span>
-                  {(!showNewTaskDescription) ? (
-                    <Button id="addDescription" label="Add Description" onClick={() => { setShowNewTaskDescription(true) }} />
-                  ) : null}
-                  <Calendar name='taskDate' placeholder="Due Date" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} />
-                  <Dropdown
-                    name='taskFrequency'
-                    value={newTaskInfo.taskFrequency}
-                    onChange={handleNewTaskChange}
-                    options={frequencies}
-                    placeholder="Select Frequency"
-                    className="w-full m:w-14rem"
-                  />
-                  <Button label="Add Task" onClick={newTaskSubmit} />
-                </div>
-                <div className='desc'>
-                  <InputTextarea
-                    name="taskDescription"
-                    id="descriptionInput"
-                    placeholder='Enter Description'
-                    autoResize
-                    value={newTaskInfo.taskDescription}
-                    onChange={handleNewTaskChange}
-                  />
-                  <Button id="closeDescription" label="X" onClick={() => { setShowNewTaskDescription(false) }} />
-                </div>
-              </div>
-            </Panel>
-            : null)}
+      {/* New Task Panel */}
+      {((show.newTask) ?
+        <Panel className="newPanel" header="New Task" toggleable collapsed>
+          <div className={`${(!showNewTaskDescription) ? 'slide-in' : 'slide-out'}`} id="newCard">
+            <div id="addTask">
+              <span className="p-float-label">
+                <InputText
+                  id="taskName"
+                  name='taskName'
+                  value={newTaskInfo.taskName}
+                  onChange={handleNewTaskChange} />
+                <label htmlFor='taskName'>Task</label>
+              </span>
+              {(!showNewTaskDescription) ? (
+                <Button id="addDescription" label="Add Description" onClick={() => { setShowNewTaskDescription(true) }} />
+              ) : null}
+              <Calendar name='taskDate' placeholder="Due Date" value={newTaskInfo.taskDate} onChange={handleNewTaskChange} />
+              <Dropdown
+                name='taskFrequency'
+                value={newTaskInfo.taskFrequency}
+                onChange={handleNewTaskChange}
+                options={frequencies}
+                placeholder="Select Frequency"
+                className="w-full m:w-14rem"
+              />
+              <Button label="Add Task" onClick={newTaskSubmit} />
+            </div>
+            <div className='desc'>
+              <InputTextarea
+                name="taskDescription"
+                id="descriptionInput"
+                placeholder='Enter Description'
+                autoResize
+                value={newTaskInfo.taskDescription}
+                onChange={handleNewTaskChange}
+              />
+              <Button id="closeDescription" label="X" onClick={() => { setShowNewTaskDescription(false) }} />
+            </div>
+          </div>
+        </Panel>
+        : null)}
       {/* Project Panel */}
       {((show.Projects) ?
         <Panel className='projectPanel' header='Projects' toggleable>
